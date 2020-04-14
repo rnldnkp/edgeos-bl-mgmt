@@ -1,0 +1,63 @@
+#
+#-----------------------------------------------------------
+#
+# URL list of whitelist files
+#   - One URL per line
+#   - Blank lines OK
+#   - Hash (#) begins comment
+#
+# For use with updWhiteList.sh
+#   - Review and edit as desired
+#   - Place this file in /config/user-data
+#
+# Last update: 2020 april 14
+#
+#-----------------------------------------------------------
+#
+# IP-Deny
+#  Also see http://www.ipdeny.com/ipblocks/
+#  List as many as needed, substituting the proper 2-letter country code
+#    for CC below
+#
+# Netherlands
+https://www.ipdeny.com/ipblocks/data/aggregated/nl-aggregated.zone
+https://www.ipdeny.com/ipv6/ipaddresses/aggregated/nl-aggregated.zone
+# Belgium
+#https://www.ipdeny.com/ipblocks/data/aggregated/be-aggregated.zone
+#https://www.ipdeny.com/ipv6/ipaddresses/aggregated/be-aggregated.zone
+# Germany
+#https://www.ipdeny.com/ipblocks/data/aggregated/de-aggregated.zone
+#https://www.ipdeny.com/ipv6/ipaddresses/aggregated/de-aggregated.zone
+# France
+#https://www.ipdeny.com/ipblocks/data/aggregated/fr-aggregated.zone
+#https://www.ipdeny.com/ipv6/ipaddresses/aggregated/fr-aggregated.zone
+# Spain
+#https://www.ipdeny.com/ipblocks/data/aggregated/sp-aggregated.zone
+#https://www.ipdeny.com/ipv6/ipaddresses/aggregated/sp-aggregated.zone
+# Luxembourg
+#https://www.ipdeny.com/ipblocks/data/aggregated/lu-aggregated.zone
+#https://www.ipdeny.com/ipv6/ipaddresses/aggregated/lu-aggregated.zone
+# Austria
+#https://www.ipdeny.com/ipblocks/data/aggregated/at-aggregated.zone
+#https://www.ipdeny.com/ipv6/ipaddresses/aggregated/at-aggregated.zone
+# Norway
+#https://www.ipdeny.com/ipblocks/data/aggregated/no-aggregated.zone
+#https://www.ipdeny.com/ipv6/ipaddresses/aggregated/no-aggregated.zone
+# Italy
+#https://www.ipdeny.com/ipblocks/data/aggregated/it-aggregated.zone
+#https://www.ipdeny.com/ipv6/ipaddresses/aggregated/it-aggregated.zone
+# Poland
+#https://www.ipdeny.com/ipblocks/data/aggregated/pl-aggregated.zone
+#https://www.ipdeny.com/ipv6/ipaddresses/aggregated/pl-aggregated.zone
+# Switzerland
+#https://www.ipdeny.com/ipblocks/data/aggregated/ch-aggregated.zone
+#https://www.ipdeny.com/ipv6/ipaddresses/aggregated/ch-aggregated.zone
+# UK
+#https://www.ipdeny.com/ipblocks/data/aggregated/gb-aggregated.zone
+#https://www.ipdeny.com/ipv6/ipaddresses/aggregated/gb-aggregated.zone
+# Canada
+#https://www.ipdeny.com/ipblocks/data/aggregated/ca-aggregated.zone
+#https://www.ipdeny.com/ipv6/ipaddresses/aggregated/ca-aggregated.zone
+# USA
+#https://www.ipdeny.com/ipblocks/data/aggregated/us-aggregated.zone
+#https://www.ipdeny.com/ipv6/ipaddresses/aggregated/us-aggregated.zone
