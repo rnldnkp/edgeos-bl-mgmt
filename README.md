@@ -1,13 +1,15 @@
-## Ubiquiti Networks EdgeRouter Firewall BlockList Management
+## Ubiquiti Networks EdgeRouter Firewall BlockList and Whitelist Management
 -------------------------------------------------------------
 Automated management of network and host address blocklists, for use
 in EdgeRouter (EdgeOS) firewall rules.
-
+Forked to have an automated network and host address whitelist aswell.
 
 ### Quick Start
+
+## Prepare original blacklist
 To get started, perform these steps on your EdgeRouter from a CLI configure prompt:  
-1. For IPv4:  `set firewall group network-group Nets4-BlackList description 'Blacklisted IPv4 Sources'`  
-2. For IPv6:  `set firewall group ipv6-network-group Nets6-BlackList description 'Blacklisted IPv6 Sources'`  
+1. For IPv4 Blacklist:  `set firewall group network-group Nets4-BlackList description 'Blacklisted IPv4 Sources'`  
+2. For IPv6 Blacklist:  `set firewall group ipv6-network-group Nets6-BlackList description 'Blacklisted IPv6 Sources'`  
 3. `cp updBlackList.sh /config/scripts/updBlackList.sh`  
 4. `cp fw-BlackList-URLs.txt /config/user-data/fw-BlackList-URLs.txt`  
 5. `cp loadBlackList.sh /config/scripts/post-config.d/loadBlackList.sh`  
@@ -15,6 +17,17 @@ To get started, perform these steps on your EdgeRouter from a CLI configure prom
 7. `set system task-scheduler task Update-Blacklists interval 12h`  
 8. `sudo /config/scripts/updBlackList.sh`  
 
+## Prepare the whitelist fork
+1. For IPv4 Whitelist:  `set firewall group network-group Nets4-WhiteList description 'Whitelisted IPv4 Sources'`  
+2. For IPv6 Whitelist:  `set firewall group ipv6-network-group Nets6-WhiteList description 'Whitelisted IPv6 Sources'`  
+3. `cp updWhiteList.sh /config/scripts/updWhiteList.sh`  
+4. `cp fw-WhiteList-URLs.txt /config/user-data/fw-WhiteList-URLs.txt` 
+5. `cp loadWhiteList.sh /config/scripts/post-config.d/loadWhiteList.sh`  
+6. `set system task-scheduler task Update-Whitelists executable path /config/scripts/updWhiteList.sh`  
+7. `set system task-scheduler task Update-Whitelists interval 12h`  
+8. `sudo /config/scripts/updWhiteList.sh`  
+
+## Prepare original blacklist FW rules
 You will also need to create a firewall rule to deny inbound source addresses
 that match this network-group `Nets4-BlackList`.  An example using
 a zone-based firewall might look like:  
@@ -39,6 +52,30 @@ Similar for IPv6:
 8. `set firewall ipv6-name wan-self-6 rule 1 action drop`  
 9. `set firewall ipv6-name wan-self-6 rule 1 protocol all`  
 
+## Prepare the whitelist fork FW rules (Example - change to your own situation!)
+IPv4
+1. `set firewall name wan-dmz-4 rule 1 source group network-group Nets4-WhiteList`  
+2. `set firewall name wan-dmz-4 rule 1 action accept`
+3. `set firewall name wan-dmz-4 rule 1 protocol all`
+4. `set firewall name wan-lan-4 rule 1 source group network-group Nets4-WhiteList`  
+5. `set firewall name wan-lan-4 rule 1 action accept`  
+6. `set firewall name wan-lan-4 rule 1 protocol all`  
+7. `set firewall name wan-self-4 rule 1 source group network-group Nets4-WhiteList`  
+8. `set firewall name wan-self-4 rule 1 action accept`  
+9. `set firewall name wan-self-4 rule 1 protocol all`  
+
+IPv6:
+1. `set firewall ipv6-name wan-dmz-6 rule 1 source group ipv6-network-group Nets6-WhiteList`  
+2. `set firewall ipv6-name wan-dmz-6 rule 1 action accept`  
+3. `set firewall ipv6-name wan-dmz-6 rule 1 protocol all`  
+4. `set firewall ipv6-name wan-lan-6 rule 1 source group ipv6-network-group Nets6-WhiteList`  
+5. `set firewall ipv6-name wan-lan-6 rule 1 action accept`  
+6. `set firewall ipv6-name wan-lan-6 rule 1 protocol all`  
+7. `set firewall ipv6-name wan-self-6 rule 1 source group ipv6-network-group Nets6-WhiteList`  
+8. `set firewall ipv6-name wan-self-6 rule 1 action accept`  
+9. `set firewall ipv6-name wan-self-6 rule 1 protocol all`
+
+## For both methods
 To use the optional `iprange` for optimization and reduction you will need to install the
 binary.  There is an existing iprange .deb package for both mips and mipsel that
 may be used.
@@ -63,6 +100,7 @@ appropriate.
 `updBlackList.sh` is the actual tool that will fetch various blocklists,
 consolidate into one group, and load into a pre-existing IPset already used
 with firewall rulesets.  
+`updWhiteList.sh` does the same for whitelists.
 You may schedule this appropriately for your needs, but the quick start above
 provides for a twice-daily update at noon and midnight.  Note that most list
 providers have guidelines on frequency of retrieval so these should be taken
@@ -73,6 +111,8 @@ into account when setting the schedule.
 The file `fw-BlackList-URLs.txt` should contain the list of URLs to
 individual blocklist of networks and hosts.  Blank lines and comments
 (beginning with a hash (#) are acceptable).  
+The file `fw-WhiteList-URLs.txt` contain the list of URL's to whitelisted 
+networks and hosts.
 The sample provided here has many sources listed as a starting point,
 though only some are enabled (uncommented).  Note that several of the indicated
 lists either overlap or fully include other lists so it is not necessary nor is
@@ -81,12 +121,12 @@ it recommended to blindly uncomment all URLs here.
 
 
 ### Boot-time IPset reload script
-Since the `updBlackList.sh` tool directly manipulates IPsets and does
-not reflect any changes in the EdgeOS `config.boot`, contents of the
-blocklist network-groups are lost upon reboot/restart of the EdgeRouter.  
-The `loadBlackList.sh` script addresses this by restoring the previously
-saved network-groups at boot time.  
-Alternatively, the `updBlackList.sh` script may be re-run at boot-time.
+Since the `updBlackList.sh`/`updWhiteList.sh` tool directly manipulates 
+IPsets and does not reflect any changes in the EdgeOS `config.boot`, contents 
+of the blocklist network-groups are lost upon reboot/restart of the EdgeRouter.  
+The `loadBlackList.sh`/`loadWhiteList.sh` script addresses this by restoring the 
+previously saved network-groups at boot time.  
+Alternatively, the `updBlackList.sh`/`updWhiteList.sh` script may be re-run at boot-time.
 This will take longer, however, since it will recreate the list newly.
 
 
