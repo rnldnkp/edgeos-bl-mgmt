@@ -3,7 +3,7 @@
 Automated management of network and host address blocklists, for use
 in EdgeRouter (EdgeOS) firewall rules.
 
-Forked to have an automated network and host address whitelist aswell!
+Forked to have an automated network and host address whitelist as well!
 
 ### Quick Start
 
