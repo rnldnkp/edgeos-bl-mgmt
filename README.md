@@ -14,9 +14,11 @@ To get started, perform these steps on your EdgeRouter from a CLI configure prom
 3. `cp updBlackList.sh /config/scripts/updBlackList.sh`  
 4. `cp fw-BlackList-URLs.txt /config/user-data/fw-BlackList-URLs.txt`  
 5. `cp loadBlackList.sh /config/scripts/post-config.d/loadBlackList.sh`  
-6. `set system task-scheduler task Update-Blacklists executable path /config/scripts/updBlackList.sh`  
-7. `set system task-scheduler task Update-Blacklists interval 12h`  
-8. `sudo /config/scripts/updBlackList.sh`  
+6. `sudo chmod +x /config/scripts/updBlackList.sh`
+7. `sudo chmod +x /config/scripts/post-config.d/loadBlackList.sh`
+8. `set system task-scheduler task Update-Blacklists executable path /config/scripts/updBlackList.sh`  
+9. `set system task-scheduler task Update-Blacklists interval 12h`  
+10. `sudo /config/scripts/updBlackList.sh`  
 
 ## Prepare the whitelist fork
 1. For IPv4 Whitelist:  `set firewall group network-group Nets4-WhiteList description 'Whitelisted IPv4 Sources'`  
@@ -24,9 +26,11 @@ To get started, perform these steps on your EdgeRouter from a CLI configure prom
 3. `cp updWhiteList.sh /config/scripts/updWhiteList.sh`  
 4. `cp fw-WhiteList-URLs.txt /config/user-data/fw-WhiteList-URLs.txt` 
 5. `cp loadWhiteList.sh /config/scripts/post-config.d/loadWhiteList.sh`  
-6. `set system task-scheduler task Update-Whitelists executable path /config/scripts/updWhiteList.sh`  
-7. `set system task-scheduler task Update-Whitelists interval 12h`  
-8. `sudo /config/scripts/updWhiteList.sh`  
+6. `sudo chmod +x /config/scripts/updWhiteList.sh`
+7. `sudo chmod +x /config/scripts/post-config.d/loadWhiteList.sh`
+8. `set system task-scheduler task Update-Whitelists executable path /config/scripts/updWhiteList.sh`  
+9. `set system task-scheduler task Update-Whitelists interval 12h`  
+10. `sudo /config/scripts/updWhiteList.sh`  
 
 ## Prepare original blacklist FW rules
 You will also need to create a firewall rule to deny inbound source addresses
@@ -164,6 +168,20 @@ discussion thread in the Ubiquiti Networks community forums.
 This utility is one option among several for ingress filtering, and is primarily
 intended to be used in lieu of, or perhaps in supplement of, (egress-based)
 blackhole-routing and BGP route filtering.
+
+### Troubleshooting
+Run these commands die verify your setup works
+
+`sudo ipset -L Nets4-BlackList | wc -l`
+`sudo ipset -L Nets6-WhiteList | wc -l`
+`sudo ipset -L Nets4-WhiteList | wc -l`
+`sudo ipset -L Nets6-WhiteList | wc -l`
+
+Depending on the sources you used (and the normal number of IP's they contain) you should see a number in the thousands.
+If the number is to low. Run the load command and check again after that.
+
+`sudo ./config/scripts/post-config.d/loadBlackList.sh`
+`sudo ./config/scripts/post-config.d/loadWhiteList.sh`
 
 #### Note
 Arbitrary lists should not be summarily added or enabled for blocking.
